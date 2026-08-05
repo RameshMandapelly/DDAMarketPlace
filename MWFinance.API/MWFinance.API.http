@@ -1,0 +1,6 @@
+@MWFinance.API_HostAddress = http://localhost:5143
+
+GET {{MWFinance.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

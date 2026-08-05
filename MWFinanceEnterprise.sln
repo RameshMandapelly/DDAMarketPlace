@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37301.10
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWFinance.Domain", "MWFinance.Domain\MWFinance.Domain.csproj", "{1DC9DF04-D8B3-4ED4-8993-065A67561700}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWFinance.Infrastructure", "MWFinance.Infrastructure\MWFinance.Infrastructure.csproj", "{DCA8E1C4-953A-4ED1-8AEE-FBD7117115BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWFinance.API", "MWFinance.API\MWFinance.API.csproj", "{E5DE95EB-64CD-411A-B1C7-170199DEEF73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignoreadditions.txt = .gitignoreadditions.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\Fintech_Integration_Guide.pdf = ..\..\..\Downloads\Fintech_Integration_Guide.pdf
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DC9DF04-D8B3-4ED4-8993-065A67561700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC9DF04-D8B3-4ED4-8993-065A67561700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC9DF04-D8B3-4ED4-8993-065A67561700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC9DF04-D8B3-4ED4-8993-065A67561700}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCA8E1C4-953A-4ED1-8AEE-FBD7117115BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCA8E1C4-953A-4ED1-8AEE-FBD7117115BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCA8E1C4-953A-4ED1-8AEE-FBD7117115BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCA8E1C4-953A-4ED1-8AEE-FBD7117115BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5DE95EB-64CD-411A-B1C7-170199DEEF73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5DE95EB-64CD-411A-B1C7-170199DEEF73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5DE95EB-64CD-411A-B1C7-170199DEEF73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5DE95EB-64CD-411A-B1C7-170199DEEF73}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {19E1DEC1-40B0-4F88-AAED-DD45E842AA68}
+	EndGlobalSection
+EndGlobal
