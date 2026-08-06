@@ -6,11 +6,10 @@ using MWFinance.API.Helpers;
 using MWFinance.Domain.Interfaces;
 using MWFinance.Infrastructure.Data;
 using MWFinance.Infrastructure.Repositories;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System;
 using System.Text;
 using Serilog;
-using Serilog.Sinks.PostgreSQL;
+using Serilog.Sinks.MySQL;               // <-- replaces Serilog.Sinks.PostgreSQL
 
 
 try
@@ -24,24 +23,11 @@ try
     Console.WriteLine("=== MWFinance API Starting ===");
     Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 
-    // ?? DIAGNOSTIC: Print config values so you can verify them ???????????????????
+    // DIAGNOSTIC: Print config values so you can verify them
     Console.WriteLine($"DB Connection: {(string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection")) ? "MISSING!" : "Found")}");
     Console.WriteLine($"Jwt:Key:      {(string.IsNullOrEmpty(builder.Configuration["Jwt:Key"]) ? "MISSING!" : "Found (length=" + builder.Configuration["Jwt:Key"]!.Length + ")")}");
     Console.WriteLine($"Jwt:Issuer:   {builder.Configuration["Jwt:Issuer"] ?? "MISSING!"}");
     Console.WriteLine($"Jwt:Audience: {builder.Configuration["Jwt:Audience"] ?? "MISSING!"}");
-
-
-    // Define which columns to create in the Logs table
-    var columnOptions = new Dictionary<string, ColumnWriterBase>
-                {
-                    { "Message",    new RenderedMessageColumnWriter() },
-                    { "Level",      new LevelColumnWriter(renderAsText: false) },
-                    { "TimeStamp",  new TimestampColumnWriter() },
-                    { "Exception",  new ExceptionColumnWriter() },
-                    { "Properties", new PropertiesColumnWriter() },
-                    { "ClientId",   new SinglePropertyColumnWriter("ClientId",   PropertyWriteMethod.Raw) },
-                    { "CompanyName",new SinglePropertyColumnWriter("CompanyName", PropertyWriteMethod.Raw) }
-                };
 
     // Get the connection string — same one your API already uses
     string logConnectionString = builder.Configuration
@@ -50,18 +36,17 @@ try
     Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Debug()
         .Enrich.FromLogContext()
-        .WriteTo.Console()        
+        .WriteTo.Console()
         .WriteTo.File(
             path: "C:/MWFinanceLogs/log-.txt",
             rollingInterval: RollingInterval.Day,
             outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-        .WriteTo.PostgreSQL(
-                    connectionString: logConnectionString,
-                    tableName: "MwfDDAMarketPlaceLogs",
-                    columnOptions: columnOptions,
-                    needAutoCreateTable: true,                    
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information
-                    )
+        // Serilog.Sinks.MySQL: table is auto-created on first write.
+        // NuGet: Install-Package Serilog.Sinks.MySQL
+        .WriteTo.MySQL(
+            connectionString: logConnectionString,
+            tableName: "MwfDDAMarketPlaceLogs",
+            storeTimestampInUtc: true)
         .CreateLogger();
     builder.Host.UseSerilog();
 
@@ -79,7 +64,6 @@ try
             Description = "Direct Debit middleware API for Fintech integrations"
         });
 
-        // ? NEW: Add the "Authorize" button to Swagger UI
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             Name = "Authorization",
@@ -90,7 +74,6 @@ try
             Description = "Enter your JWT token like this: Bearer {your token here}"
         });
 
-        // ? NEW: Make Swagger send the token automatically on protected endpoints
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -106,22 +89,29 @@ try
         }
     });
     });
-    //builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+    // ── MySQL via Pomelo ────────────────────────────────────────────────
+    // NuGet: Install-Package Pomelo.EntityFrameworkCore.MySql
+    // Remove Npgsql.EntityFrameworkCore.PostgreSQL package reference.
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseMySql(
+            connectionString,
+            ServerVersion.AutoDetect(connectionString),
+            mySqlOptions => mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null)));
+
     builder.Services.Configure<DdaGatewaySettingsHelper>(
     builder.Configuration.GetSection(DdaGatewaySettingsHelper.SectionName));
 
 
     builder.Services.AddHttpClient();
     builder.Services.AddScoped<IDdaRepository, DdaRepository>();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    //builder.Services.AddSwaggerGen();
-    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    // NOTE: AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true) removed —
+    // this was a Postgres/Npgsql-only compatibility switch and has no MySQL equivalent/need.
 
     var jwtKey = builder.Configuration["Jwt:Key"]
         ?? throw new InvalidOperationException("Jwt:Key is missing from appsettings.json");
@@ -153,7 +143,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-    
+
     app.UseHttpsRedirection();
     app.UseMiddleware<MWFinance.API.Middleware.LogEnrichmentMiddleware>();
     app.UseAuthentication();
@@ -163,7 +153,6 @@ try
 
     app.Run();
     Console.WriteLine("=== Pipeline ready. Starting server... ===");
-    Console.WriteLine("=== Navigate to: https://localhost:7084/swagger/index.html ===");
 }
 catch (Exception ex)
 {
