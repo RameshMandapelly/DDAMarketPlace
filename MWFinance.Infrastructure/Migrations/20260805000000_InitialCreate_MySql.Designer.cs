@@ -11,162 +11,162 @@ using Pomelo.EntityFrameworkCore.MySql.Metadata;
 
 namespace MWFinance.Infrastructure.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260805000000_InitialCreate_MySql")]
-    partial class InitialCreate_MySql
-    {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
+          [DbContext(typeof(ApplicationDbContext))]
+          [Migration("20260805000000_InitialCreate_MySql")]
+          partial class InitialCreate_MySql
+          {
+                    /// <inheritdoc />
+                    protected override void BuildTargetModel(ModelBuilder modelBuilder)
+                    {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasCharSet("utf8mb4")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasAnnotation("ProductVersion", "8.0.27")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                              modelBuilder
+                                  .HasCharSet("utf8mb4")
+                                  .UseCollation("utf8mb4_0900_ai_ci")
+                                  .HasAnnotation("ProductVersion", "8.0.27")
+                                  .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("MWFinance.Domain.Entities.DirectDebitAuthority", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                              modelBuilder.Entity("MWFinance.Domain.Entities.DirectDebitAuthority", b =>
+                                  {
+                                            b.Property<int>("Id")
+                              .ValueGeneratedOnAdd()
+                              .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                                            MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AmountType")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("AmountType")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CentralBankRefNumber")
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CentralBankRefNumber")
+                              .HasColumnType("longtext");
 
-                    b.Property<DateTime>("CommencesOn")
-                        .HasColumnType("datetime(6)");
+                                            b.Property<DateTime>("CommencesOn")
+                              .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
+                                            b.Property<DateTime>("CreatedAt")
+                              .HasColumnType("datetime(6)");
 
-                    b.Property<string>("CreditCardHolderName")
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CreditCardHolderName")
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustNid")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustNid")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerAccountBankName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerAccountBankName")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerBankAccountNumber")
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerBankAccountNumber")
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerBankAccountTitle")
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerBankAccountTitle")
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerBankAccountType")
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerBankAccountType")
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerCreditCardNumber")
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerCreditCardNumber")
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerEmail")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerEmail")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerFullName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerFullName")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerIdNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerIdNumber")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerIdType")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerIdType")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerMobileNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerMobileNumber")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("CustomerType")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("CustomerType")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<int>("DdaId")
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                                            b.Property<int>("DdaId")
+                              .HasColumnType("int")
+                              .HasDefaultValue(0);
 
-                    b.Property<string>("DdaReferenceNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("DdaReferenceNumber")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("DdaStatus")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("DdaStatus")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<int?>("DdarId")
-                        .HasColumnType("int");
+                                            b.Property<int?>("DdarId")
+                              .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpiresOn")
-                        .HasColumnType("datetime(6)");
+                                            b.Property<DateTime>("ExpiresOn")
+                              .HasColumnType("datetime(6)");
 
-                    b.Property<decimal>("MaxAmount")
-                        .HasColumnType("decimal(18,2)");
+                                            b.Property<decimal>("MaxAmount")
+                              .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("MinAmount")
-                        .HasColumnType("decimal(18,2)");
+                                            b.Property<decimal>("MinAmount")
+                              .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("PaymentFrequency")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("PaymentFrequency")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.Property<string>("UserPreferPaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                                            b.Property<string>("UserPreferPaymentMethod")
+                              .IsRequired()
+                              .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                                            b.HasKey("Id");
 
-                    b.ToTable("DirectDebitAuthorities");
-                });
+                                            b.ToTable("DirectDebitAuthorities");
+                                  });
 
-            modelBuilder.Entity("MWFinance.Domain.Entities.FintechClientApi", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                              modelBuilder.Entity("MWFinance.Domain.Entities.FintechClientApi", b =>
+                                  {
+                                            b.Property<int>("Id")
+                              .ValueGeneratedOnAdd()
+                              .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                                            MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClientId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                                            b.Property<string>("ClientId")
+                              .IsRequired()
+                              .HasMaxLength(100)
+                              .HasColumnType("varchar(100)");
 
-                    b.Property<string>("ClientSecretHash")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                                            b.Property<string>("ClientSecretHash")
+                              .IsRequired()
+                              .HasMaxLength(255)
+                              .HasColumnType("varchar(255)");
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                                            b.Property<string>("CompanyName")
+                              .IsRequired()
+                              .HasMaxLength(200)
+                              .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
+                                            b.Property<DateTime>("CreatedAt")
+                              .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                                            b.Property<bool>("IsActive")
+                              .HasColumnType("tinyint(1)");
 
-                    b.HasKey("Id");
+                                            b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
-                        .IsUnique();
+                                            b.HasIndex("ClientId")
+                              .IsUnique();
 
-                    b.ToTable("FintechClienstApi");
-                });
+                                            b.ToTable("FintechClienstApi");
+                                  });
 #pragma warning restore 612, 618
-        }
-    }
+                    }
+          }
 }

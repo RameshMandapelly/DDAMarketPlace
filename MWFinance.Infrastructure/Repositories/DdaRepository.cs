@@ -1,6 +1,5 @@
 ﻿using MWFinance.Domain.Entities;
 using MWFinance.Domain.Interfaces;
-//using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using MWFinance.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MySqlConnector;   // <-- replaces Npgsql; comes in via Pomelo.EntityFrameworkCore.MySql
 
 
 namespace MWFinance.Infrastructure.Repositories
@@ -17,21 +17,19 @@ namespace MWFinance.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<DdaRepository> _logger;
-        public DdaRepository(ApplicationDbContext context,ILogger<DdaRepository> logger)
+        public DdaRepository(ApplicationDbContext context, ILogger<DdaRepository> logger)
         {
             _context = context;
-            _logger= logger;
+            _logger = logger;
         }
 
         public async Task AddAsync(DirectDebitAuthority dda)
-        {            
+        {
             await _context.DirectDebitAuthorities.AddAsync(dda);
         }
 
         public async Task SaveChangesAsync()
         {
-            
-            //await _context.SaveChangesAsync();
             try
             {
                 int affectedRows = await _context.SaveChangesAsync();
@@ -40,21 +38,20 @@ namespace MWFinance.Infrastructure.Repositories
                     "DdaRepository.SaveChangesAsync: committed successfully, AffectedRows={AffectedRows}",
                     affectedRows);
             }
-            catch (DbUpdateException ex) when (ex.InnerException is Npgsql.PostgresException pgEx)
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mysqlEx)
             {
-                // Postgres-specific error (constraint violation, bad data, etc.)
-                // pgEx.SqlState gives you the exact Postgres error code (e.g. "23505" = unique violation)
+                // MySQL-specific error (constraint violation, bad data, etc.)
+                // mysqlEx.Number gives you the exact MySQL error code (e.g. 1062 = duplicate entry / unique violation)
                 _logger.LogError(ex,
-                    "DdaRepository.SaveChangesAsync: Postgres error. SqlState={SqlState}, Detail={Detail}",
-                    pgEx.SqlState, pgEx.MessageText);
+                    "DdaRepository.SaveChangesAsync: MySQL error. ErrorCode={ErrorCode}, Message={Message}",
+                    mysqlEx.Number, mysqlEx.Message);
                 throw;
             }
-            catch (Npgsql.NpgsqlException ex) when (ex.IsTransient)
+            catch (MySqlException ex) when (ex.IsTransient)
             {
                 // Transient = likely timeout, connection drop, or temporary network issue
-                // Safe to consider retrying these in the future if you add retry logic
                 _logger.LogError(ex,
-                    "DdaRepository.SaveChangesAsync: transient Npgsql error (likely timeout/network issue)");
+                    "DdaRepository.SaveChangesAsync: transient MySQL error (likely timeout/network issue)");
                 throw;
             }
             catch (TaskCanceledException ex)
@@ -73,8 +70,7 @@ namespace MWFinance.Infrastructure.Repositories
 
         public async Task<DirectDebitAuthority?> GetByReferenceAsync(string ddaRefNo)
         {
-            
-            return await _context.DirectDebitAuthorities.FirstOrDefaultAsync( x=>x.DdaReferenceNumber == ddaRefNo) ?? null;
+            return await _context.DirectDebitAuthorities.FirstOrDefaultAsync(x => x.DdaReferenceNumber == ddaRefNo) ?? null;
         }
 
         public async Task<DirectDebitAuthority?> GetByIdentifierStringAsync(string identifier)
@@ -96,7 +92,5 @@ namespace MWFinance.Infrastructure.Repositories
 
             return record;
         }
-
-
     }
 }
